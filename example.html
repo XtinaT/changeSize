@@ -4,23 +4,23 @@
     <meta charset="utf-8" />
     <style>
       body {
-        position: relative;
         margin: 0;
         background-color: #536453;
       }
       #BIG {
-        width: 310px;
+        width: 300px;
         height: 200px;
         background: url("picture.jpg") no-repeat;
         background-size: cover;
         position: absolute;
-        left: 100px;
-        top: 100px;
+        left: 30%;
+        top: 30%;
       }
     </style>
   </head>
   <body>
     <div id="BIG"></div>
+
     <script>
       "use strict";
 
@@ -90,14 +90,8 @@
           self.style.top = Math.round(e.pageY - deltaY) + "px";
           for (var i = 0; i < array.length; i++) {
             //array[i].style.visibility = "hidden";
-            var a =
-              count(Math.round(e.pageX - deltaX), Math.round(e.pageY - deltaY))[
-                i
-              ][0] + "px";
-            var b =
-              count(Math.round(e.pageX - deltaX), Math.round(e.pageY - deltaY))[
-                i
-              ][1] + "px";
+            var a =count(Math.round(e.pageX - deltaX), Math.round(e.pageY - deltaY))[i][0] + "px";
+            var b =count(Math.round(e.pageX - deltaX), Math.round(e.pageY - deltaY))[i][1] + "px";
             array[i].style.left = a;
             array[i].style.top = b;
           }
@@ -122,8 +116,8 @@
         array[i].addEventListener("mousedown", mouseDownl, false);
         array[i].addEventListener("mouseover", mouseOverl, false);
       }
-      var prev_x = -1;
-      var prev_y = -1;
+      var prev_x;
+      var prev_y;
       function mouseDownl(e) {
         e = e || window.event;
         var self = this;
@@ -140,8 +134,22 @@
 
         function mouseMovel(e) {
           e.preventDefault();
-          if (prev_x == -1)
-            return;
+          var imgPos = self.getBoundingClientRect();
+        
+        var width = imgPos.width;
+          function count(imgWidth,imgHeight) {
+          var formulas = [
+            [0 - width / 2, 0 - width / 2],
+            [0 + (imgWidth - width) / 2, 0 - width / 2],
+            [0 + imgWidth - width / 2, 0 - width / 2],
+            [0 + imgWidth - width / 2, 0 + (imgHeight - width) / 2],
+            [0 + imgWidth - width / 2, 0 + imgHeight - width / 2],
+            [0 + (imgWidth - width) / 2, 0 + imgHeight - width / 2],
+            [0 - width / 2, 0 + imgHeight - width / 2],
+            [0 - width / 2, 0 + (imgHeight - width) / 2],
+          ];
+          return formulas;
+        }
           var bigPos = bigImg.getBoundingClientRect();
           var bigLeft = bigPos.x;
           var bigTop = bigPos.y;
@@ -150,28 +158,128 @@
           var deltaX = e.clientX - prev_x;
           var deltaY = e.clientY - prev_y;
           switch (j) {
+            case 0:
+              bigTop += (2 * deltaX) / 3;
+              bigHeight -= (2 * deltaX) / 3;
+              bigLeft += deltaX;
+              bigWidth -= deltaX;
+              bigImg.style.left = bigLeft + "px";
+              bigImg.style.top = bigTop + "px";
+              bigImg.style.width = bigWidth + "px";
+              bigImg.style.height = bigHeight + "px";
+              for (var i = 0; i < array.length; i++) {
+          var a = count(bigWidth,bigHeight)[i][0] + "px";
+          var b = count(bigWidth,bigHeight)[i][1] + "px";
+          array[i].style.left = a;
+          array[i].style.top = b;
+        }
+              break;
             case 1:
-              bigTop += dy;
-              bigHeight -= dy;
+              bigTop += deltaY;
+              bigHeight -= deltaY;
+              bigImg.style.left = bigLeft + "px";
+              bigImg.style.top = bigTop + "px";
+              bigImg.style.width = bigWidth + "px";
+              bigImg.style.height = bigHeight + "px";
+              for (var i = 0; i < array.length; i++) {
+          var a = count(bigWidth,bigHeight)[i][0] + "px";
+          var b = count(bigWidth,bigHeight)[i][1] + "px";
+          array[i].style.left = a;
+          array[i].style.top = b;
+        }
+              break;
+            case 2:
+              bigTop -= (2 * deltaX) / 3;
+              bigHeight += (2 * deltaX) / 3;
+              bigLeft -= deltaX;
+              bigWidth += deltaX;
+              bigImg.style.right = bigLeft + "px";
+              bigImg.style.top = bigTop + "px";
+              bigImg.style.width = bigWidth + "px";
+              bigImg.style.height = bigHeight + "px";
+              for (var i = 0; i < array.length; i++) {
+          var a = count(bigWidth,bigHeight)[i][0] + "px";
+          var b = count(bigWidth,bigHeight)[i][1] + "px";
+          array[i].style.left = a;
+          array[i].style.top = b;
+        }
+              break;
+            case 4:
+              bigTop += (2 * deltaX) / 3;
+              bigHeight += (2 * deltaX) / 3;
+              bigLeft += deltaX;
+              bigWidth += deltaX;
+              bigImg.style.right = bigLeft + "px";
+              bigImg.style.bottom = bigTop + "px";
+              bigImg.style.width = bigWidth + "px";
+              bigImg.style.height = bigHeight + "px";
+              for (var i = 0; i < array.length; i++) {
+          var a = count(bigWidth,bigHeight)[i][0] + "px";
+          var b = count(bigWidth,bigHeight)[i][1] + "px";
+          array[i].style.left = a;
+          array[i].style.top = b;
+        }
+              break;
+            case 6:
+              bigTop -= (2 * deltaX) / 3;
+              bigHeight -= (2 * deltaX) / 3;
+              bigLeft += deltaX;
+              bigWidth -= deltaX;
+              bigImg.style.left = bigLeft + "px";
+              bigImg.style.bottom = bigTop + "px";
+              bigImg.style.width = bigWidth + "px";
+              bigImg.style.height = bigHeight + "px";
+              for (var i = 0; i < array.length; i++) {
+          var a = count(bigWidth,bigHeight)[i][0] + "px";
+          var b = count(bigWidth,bigHeight)[i][1] + "px";
+          array[i].style.left = a;
+          array[i].style.top = b;
+        }
               break;
             case 5:
-              bigHeight += dy;
+              bigHeight += deltaY;
+              bigImg.style.left = bigLeft + "px";
+              bigImg.style.top = bigTop + "px";
+              bigImg.style.width = bigWidth + "px";
+              bigImg.style.height = bigHeight + "px";
+              for (var i = 0; i < array.length; i++) {
+          var a = count(bigWidth,bigHeight)[i][0] + "px";
+          var b = count(bigWidth,bigHeight)[i][1] + "px";
+          array[i].style.left = a;
+          array[i].style.top = b;
+        }
               break;
             case 7:
-            bigLeft += dx;
-            bigWidth -= dx;
+              bigLeft += deltaX;
+              bigWidth -= deltaX;
+              bigImg.style.left = bigLeft + "px";
+              bigImg.style.top = bigTop + "px";
+              bigImg.style.width = bigWidth + "px";
+              bigImg.style.height = bigHeight + "px";
+              for (var i = 0; i < array.length; i++) {
+          var a = count(bigWidth,bigHeight)[i][0] + "px";
+          var b = count(bigWidth,bigHeight)[i][1] + "px";
+          array[i].style.left = a;
+          array[i].style.top = b;
+        }
               break;
-            case 5:
-              bigWidth += dx;
+            case 3:
+              bigWidth += deltaX;
+              bigImg.style.left = bigLeft + "px";
+              bigImg.style.top = bigTop + "px";
+              bigImg.style.width = bigWidth + "px";
+              bigImg.style.height = bigHeight + "px";
+              for (var i = 0; i < array.length; i++) {
+          var a = count(bigWidth,bigHeight)[i][0] + "px";
+          var b = count(bigWidth,bigHeight)[i][1] + "px";
+          array[i].style.left = a;
+          array[i].style.top = b;
+        }
               break;
           }
-          bigImg.style.right = bigLeft + "px";
-          bigImg.style.bottom = bigTop + "px";
-          bigImg.style.width = bigWidth + "px";
-          bigImg.style.height = bigHeight + "px";
 
           prev_x = e.clientX;
-        prev_y = e.clientY;
+          prev_y = e.clientY;
         }
 
         function mouseUpl(e) {
@@ -179,7 +287,7 @@
           bigImg.addEventListener("mousedown", mouseDown, false);
           self.style.cursor = "default";
           prev_x = -1;
-        prev_y = -1;
+          prev_y = -1;
           document.removeEventListener("mousemove", mouseMovel, false);
           document.removeEventListener("mouseup", mouseUpl, false);
         }
