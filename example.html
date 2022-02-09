@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        position: relative;
+        margin: 0;
+        background-color: #536453;
+      }
+      #BIG {
+        width: 310px;
+        height: 200px;
+        background: url("picture.jpg") no-repeat;
+        background-size: cover;
+        position: absolute;
+        left: 100px;
+        top: 100px;
+      }
+     
+      
+      
+    </style>
+  </head>
+  <body>
+    <div id="BIG"></div>
+    <script>
+      "use strict";
+     
+        var body = document.getElementsByTagName("body");
+
+
+        var bigImg = document.getElementById("BIG");
+        bigImg.addEventListener("mousedown", mouseDown, false);
+        document.addEventListener("dblclick", hide, false);
+        var array = [];
+        function create(array) {
+          for (var i = 0; i < 8; i++) {
+            var img = document.createElement("div");
+            bigImg.appendChild(img);
+            img.style.position = "absolute";
+            img.style.visibility = "hidden";
+            img.style.width = '10px';
+            img.style.height = '10px';
+            img.style.backgroundColor = 'yellow';
+            array.push(img);
+          }
+          return array;
+        }
+        array = create(array);
+
+        function mouseDown(e) {
+          e = e || window.event;
+          var self = this;
+          e.preventDefault();
+          var imgPos = self.getBoundingClientRect();
+          var imgTop = imgPos.y + window.pageYOffset;
+          var imgLeft = imgPos.x + window.pageXOffset;
+          var imgWidth = imgPos.width;
+          var imgHeight = imgPos.height;
+          var deltaX = e.clientX - imgLeft;
+          var deltaY = e.clientY - imgTop;
+
+          var coords = array[0].getBoundingClientRect();
+          const width = coords.width;
+          function count() {
+            var formulas = [
+              [0 - width / 2, 0 - width / 2],
+              [0 + (imgWidth - width) / 2, 0 - width / 2],
+              [0 + imgWidth - width / 2, 0 - width / 2],
+              [0 + imgWidth - width / 2, 0 + (imgHeight - width) / 2,],
+              [0 + imgWidth - width / 2, 0 + imgHeight - width / 2],
+              [0 + (imgWidth - width) / 2, 0 + imgHeight - width / 2,],
+              [0 - width / 2, 0 + imgHeight - width / 2],
+              [0 - width / 2, 0 + (imgHeight - width) / 2],
+            ];
+            return formulas;
+          }
+
+          for (var i = 0; i < array.length; i++) {
+            var a = count()[i][0] + "px";
+            var b = count()[i][1] + "px";
+            array[i].style.left = a;
+            array[i].style.top = b;
+            array[i].style.visibility = "visible";
+          }
+
+          document.addEventListener("mousemove", mouseMove, false);
+          document.addEventListener("mouseup", mouseUp, false);
+
+          function mouseMove(e) {
+            e.preventDefault();
+            self.style.left = Math.round(e.pageX - deltaX) + "px";
+            self.style.top = Math.round(e.pageY - deltaY) + "px";
+            for (var i = 0; i < array.length; i++) {
+              //array[i].style.visibility = "hidden";
+              var a = count(Math.round(e.pageX - deltaX),Math.round(e.pageY - deltaY))[i][0] + "px";
+              var b =count(Math.round(e.pageX - deltaX),Math.round(e.pageY - deltaY))[i][1] + "px";
+              array[i].style.left = a;
+              array[i].style.top = b;
+            }
+          }
+
+          function mouseUp(e) {
+            e.preventDefault();
+            document.removeEventListener("mousemove", mouseMove, false);
+            document.removeEventListener("mouseup", mouseUp, false);
+          }
+        }
+
+        function hide(e) {
+          e = e || window.event;
+          var self = this;
+          for (var i = 0; i < array.length; i++) {
+            array[i].style.visibility = "hidden";
+          }
+        }
+
+        for (var i = 0; i < array.length; i++) {
+          array[i].addEventListener("mousedown", mouseDownl, false);
+          array[i].addEventListener("mouseover", mouseOverl, false);
+        }
+        function mouseDownl(e) {
+          e = e || window.event;
+          var self = this;
+          e.preventDefault();
+          var bigImg = document.getElementById("BIG");
+          bigImg.removeEventListener("mousedown", mouseDown, false);
+          var j = array.indexOf(self);
+
+          var imgPos = self.getBoundingClientRect();
+          console.log(imgPos);
+          var imgTop = imgPos.y;
+          var imgLeft = imgPos.x;
+          var imgBottom = imgPos.bottom;
+          var imgRight = imgPos.right;
+          var width = imgPos.width;
+          console.log(e.clientX+'/'+e.clientY);
+          var deltaX = e.clientX - imgLeft;
+          var deltaY = e.clientY - imgTop;
+
+          var bigPos = bigImg.getBoundingClientRect();
+          var bigLeft = bigPos.x;
+          var bigTop = bigPos.y;
+          var bigWidth = bigPos.width;
+          var bigHeight = bigPos.height;
+          
+          document.addEventListener("mousemove", mouseMovel, false);
+          document.addEventListener("mouseup", mouseUpl, false);
+          function mouseMovel(e) {
+            e.preventDefault();
+            var delX = imgLeft - Math.round(e.pageX - deltaX);
+            self.style.left = Math.round(e.pageX - deltaX - bigLeft) + "px";
+            self.style.top = Math.round(e.pageY - deltaY - bigTop) + "px";
+            console.log(self.getBoundingClientRect());
+            var delX = imgLeft - Math.round(e.pageX - deltaX);
+            console.log(delX);
+            //var delY = imgTop - Math.round(e.pageY - deltaY);
+             switch(j) {
+               case 0:
+               case 6:
+                 var changedwidth = bigWidth + delX;
+                 break;
+               case 2:
+               case 4:
+               var changedwidth = bigWidth - delX;
+                 break;
+             }
+            bigImg.style.right = Math.round(e.pageX - deltaX - bigLeft) + "px";
+            bigImg.style.bottom = Math.round(e.pageY - deltaY - bigTop) + "px";
+            bigImg.style.width = changedwidth + "px";
+            bigImg.style.height = Math.round((2 * changedwidth) / 3) + "px";
+             
+              
+            
+
+            
+          }
+
+          function mouseUpl(e) {
+            e.preventDefault();
+            bigImg.addEventListener("mousedown", mouseDown, false);
+            self.style.cursor = "default";
+            document.removeEventListener("mousemove", mouseMovel, false);
+            document.removeEventListener("mouseup", mouseUpl, false);
+          }
+        }
+        function mouseOverl(e) {
+          e = e || window.event;
+          var self = this;
+          e.preventDefault();
+          switch (self) {
+            case array[0]:
+            case array[4]:
+              self.style.cursor = "nwse-resize";
+              break;
+            case array[1]:
+            case array[5]:
+              self.style.cursor = "ns-resize";
+              break;
+            case array[2]:
+            case array[6]:
+              self.style.cursor = "nesw-resize";
+              break;
+            case array[3]:
+            case array[7]:
+              self.style.cursor = "ew-resize";
+              break;
+          }
+        
+      }
+    </script>
+  </body>
+</html>
